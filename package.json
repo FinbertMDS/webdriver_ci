@@ -8,6 +8,7 @@
         "@wdio/mocha-framework": "^7.19.3",
         "@wdio/spec-reporter": "^7.19.1",
         "chromedriver": "^100.0.0",
+        "geckodriver": "^3.0.1",
         "ts-node": "^10.7.0",
         "typescript": "^4.6.3",
         "wdio-chromedriver-service": "^7.3.2",
