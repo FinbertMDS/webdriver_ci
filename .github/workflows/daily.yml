@@ -34,3 +34,21 @@ jobs:
       env:
         CG_USERNAME: ${{ secrets.CG_USERNAME }}
         CG_PASSWORD: ${{ secrets.CG_PASSWORD }}
+
+  ##################################
+  ### Run when a schedule failed ###
+  ##################################
+  restart_when_failed:
+    name: Restarts the scheduled run when it failed
+    runs-on: ubuntu-18.04
+    if: github.event_name == 'schedule' && failure()
+    needs: [build]
+    steps:
+      - name: Retry the workflow
+        run: |
+          curl -i \
+          -X POST \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.ACTIONS_PAT }}" \
+          https://api.github.com/repos/FinbertMDS/webdriver_ci/actions/workflows/23303722/dispatches \
+          -d '{"ref": "${{ github.ref }}" }'
