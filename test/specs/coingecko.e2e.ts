@@ -7,6 +7,7 @@ describe('CoinGecko', () => {
         await LoginPage.open();
         await LoginPage.login(constants.CG_USERNAME, constants.CG_PASSWORD);
         await CandyPage.open();
+        await browser.pause(5000);
         if (await CandyPage.collectCandyButton.isExisting()) {
             await CandyPage.collectCandyButton.click();
             console.log('collected candies');
