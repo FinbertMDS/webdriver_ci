@@ -25,3 +25,12 @@ jobs:
       env:
         CG_USERNAME: ${{ secrets.CG_USERNAME }}
         CG_PASSWORD: ${{ secrets.CG_PASSWORD }}
+    - name: upload-artifact
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: upload-screenshots
+        path: screenshots
+    - name: remove-screenshots
+      if: ${{ failure() }}
+      run: rm -rf ./screenshots
