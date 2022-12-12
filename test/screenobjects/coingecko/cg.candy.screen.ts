@@ -61,6 +61,7 @@ class CG_CandyScreen extends AppScreen {
             let canCollectText = await collectCandyButton.getText();
             console.log("canCollectText: " + canCollectText);
             await collectCandyButton.click();
+            await driver.pause(5000);
         }
     }
 }
