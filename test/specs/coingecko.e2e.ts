@@ -1,17 +1,26 @@
-import constants from '../../constants';
-import CandyPage from '../pageobjects/candy.page';
-import LoginPage from '../pageobjects/login.page';
+import config from '../../config';
+import cgCandyScreen from '../screenobjects/coingecko/cg.candy.screen';
+import cgFirststartScreen from '../screenobjects/coingecko/cg.firststart.screen';
+import cgLoginScreen from '../screenobjects/coingecko/cg.login.screen';
 
 describe('CoinGecko', () => {
+    before(async () => {
+        await driver.activateApp(config.COINGECKO_APP_ID);
+        await driver.pause(5000);
+    })
+
+    async function handleFirstTimeLogin () {
+        await cgFirststartScreen.waitForIsShown();
+        await (await cgFirststartScreen.loginButton).click();
+    }
+
     it('should collect candy', async () => {
-        await LoginPage.open();
-        await LoginPage.login(constants.CG_USERNAME, constants.CG_PASSWORD);
-        await CandyPage.open();
-        await browser.pause(10000);
-        if (await CandyPage.collectCandyButton.isExisting()) {
-            await CandyPage.collectCandyButton.click();
-            console.log('collected candies');
-        }
+        await handleFirstTimeLogin();
+
+        await cgLoginScreen.login(config.CG_USERNAME, config.CG_PASSWORD);
+        await cgLoginScreen.handleAfterLogin();
+
+        await cgCandyScreen.handleClickCandyButton();
     });
 });
 
