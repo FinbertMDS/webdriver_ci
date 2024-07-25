@@ -8,13 +8,13 @@ on:
 jobs:
   build:
     # if: (github.event_name == 'schedule')
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: 'apps'
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
         node-version: 16
         cache: 'yarn'
@@ -24,6 +24,11 @@ jobs:
         appium-version: "1.20.2"
     - name: Install dependencies
       run: yarn install --frozen-lockfile
+    - name: Enable KVM
+      run: |
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
     - name: Run Appium Tests
       uses: reactivecircus/android-emulator-runner@v2
       env:
@@ -32,7 +37,6 @@ jobs:
       with:
         api-level: 28
         target: google_apis
-        emulator-build: 7425822
         script: "[-z $CG_USERNAME ] || [ -z $CG_PASSWORD ] || (sleep 60 && yarn test)"
     - name: upload-artifact
       if: ${{ failure() }}
