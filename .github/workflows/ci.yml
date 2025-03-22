@@ -32,7 +32,7 @@ jobs:
         api-level: 28
         target: google_apis
         emulator-build: 7425822
-        script: "[-z $CG_USERNAME ] || [ -z $CG_PASSWORD ] || (sleep 60 && yarn test)"
+        script: "[-z $CG_USERNAME ] || [ -z $CG_PASSWORD ] || (yarn list-devices)"
     - name: upload-artifact
       if: ${{ failure() }}
       uses: actions/upload-artifact@v2

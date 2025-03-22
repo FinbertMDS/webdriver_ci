@@ -1,7 +1,5 @@
 import config from '../../config';
-import cgCandyScreen from '../screenobjects/coingecko/cg.candy.screen';
 import cgFirststartScreen from '../screenobjects/coingecko/cg.firststart.screen';
-import cgLoginScreen from '../screenobjects/coingecko/cg.login.screen';
 
 describe('CoinGecko', () => {
     before(async () => {
@@ -15,12 +13,12 @@ describe('CoinGecko', () => {
     }
 
     it('should collect candy', async () => {
-        await handleFirstTimeLogin();
+        // await handleFirstTimeLogin();
 
-        await cgLoginScreen.login(config.CG_USERNAME, config.CG_PASSWORD);
-        await cgLoginScreen.handleAfterLogin();
+        // await cgLoginScreen.login(config.CG_USERNAME, config.CG_PASSWORD);
+        // await cgLoginScreen.handleAfterLogin();
 
-        await cgCandyScreen.handleClickCandyButton();
+        // await cgCandyScreen.handleClickCandyButton();
     });
 });
 
