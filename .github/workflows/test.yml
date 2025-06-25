@@ -19,7 +19,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.MATCH_SSH_KEY }}
 
-      - name: Clone mobile_certs
+      - name: Clone mobile_certs 1
         run: |
           git clone https://github.com/FinbertMDS/mobile_certs.git
       
