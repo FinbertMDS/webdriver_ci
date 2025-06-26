@@ -2,35 +2,37 @@ name: Daily
 
 on:
   schedule:
-    - cron: '0 2,6,9,12,16,20 * * *'
+    - cron: "0 2,6,9,12,16,20 * * *"
   workflow_dispatch:
+  branches:
+    - master
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
-        cache: 'npm'
-    - name: Install Dependencies
-      run: npm install
-    - name: Test
-      run: ([ -z $CG_USERNAME ] || [ -z $CG_PASSWORD ] || npm test)
-      env:
-        CG_USERNAME: ${{ secrets.CG_USERNAME }}
-        CG_PASSWORD: ${{ secrets.CG_PASSWORD }}
-    - name: upload-artifact
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: upload-screenshots
-        path: screenshots
-    - name: remove-screenshots
-      if: ${{ failure() }}
-      run: rm -rf ./screenshots
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
+      - name: Install Dependencies
+        run: npm install
+      - name: Test
+        run: ([ -z $CG_USERNAME ] || [ -z $CG_PASSWORD ] || npm test)
+        env:
+          CG_USERNAME: ${{ secrets.CG_USERNAME }}
+          CG_PASSWORD: ${{ secrets.CG_PASSWORD }}
+      - name: upload-artifact
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: upload-screenshots
+          path: screenshots
+      - name: remove-screenshots
+        if: ${{ failure() }}
+        run: rm -rf ./screenshots
 
   ##################################
   ### Run when a schedule failed ###

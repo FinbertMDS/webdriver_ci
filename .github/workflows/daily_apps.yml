@@ -2,8 +2,10 @@ name: Daily Apps
 
 on:
   schedule:
-    - cron: '0 1,6 * * *'
+    - cron: "0 1,6 * * *"
   workflow_dispatch:
+  branches:
+    - master
 
 jobs:
   build:
@@ -11,42 +13,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: 'apps'
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 16
-        cache: 'yarn'
-    - name: Install Appium
-      uses: FinbertMDS/setup-appium@latest
-      with:
-        appium-version: "1.20.2"
-    - name: Install dependencies
-      run: yarn install --frozen-lockfile
-    - name: Enable KVM
-      run: |
-        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-        sudo udevadm control --reload-rules
-        sudo udevadm trigger --name-match=kvm
-    - name: Run Appium Tests
-      uses: reactivecircus/android-emulator-runner@v2
-      env:
-        CG_USERNAME: ${{ secrets.CG_USERNAME }}
-        CG_PASSWORD: ${{ secrets.CG_PASSWORD }}
-      with:
-        api-level: 28
-        target: google_apis
-        script: "sleep 60 && yarn test"
-    - name: upload-artifact
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: upload-screenshots
-        path: screenshots
-    - name: remove-screenshots
-      if: ${{ failure() }}
-      run: rm -rf ./screenshots
+      - uses: actions/checkout@v4
+        with:
+          ref: "apps"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: "yarn"
+      - name: Install Appium
+        uses: FinbertMDS/setup-appium@latest
+        with:
+          appium-version: "1.20.2"
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run Appium Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        env:
+          CG_USERNAME: ${{ secrets.CG_USERNAME }}
+          CG_PASSWORD: ${{ secrets.CG_PASSWORD }}
+        with:
+          api-level: 28
+          target: google_apis
+          script: "sleep 60 && yarn test"
+      - name: upload-artifact
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: upload-screenshots
+          path: screenshots
+      - name: remove-screenshots
+        if: ${{ failure() }}
+        run: rm -rf ./screenshots
 
   ##################################
   ### Run when a schedule failed ###
